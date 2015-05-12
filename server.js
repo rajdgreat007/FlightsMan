@@ -10,7 +10,7 @@ var nodemailer = require('nodemailer');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
-var port = process.port||3000;
+var port = process.env.PORT||3000;
 
 var router = express.Router();
 var cache = {
