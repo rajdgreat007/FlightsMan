@@ -43,7 +43,7 @@ function getLowestPriceForSelectedDate(src,dest,date,callback){
     });
 }
 router.get('/lowestPriceForSelectedDate', function(req,res){
-
+    res.json({'message':'success'});
 });
 
 
