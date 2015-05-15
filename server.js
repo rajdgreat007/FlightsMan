@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var request = require('request');
-var cheerio = require('cheerio');
+//var cheerio = require('cheerio');
 var crontab = require('node-crontab');
 var nodemailer = require('nodemailer');
 
@@ -16,7 +16,10 @@ var router = express.Router();
 var cache = {
     lowestPriceForSelectedDate : 99999,
     email : process.env.GMAIL_EMAIL,
-    pwd : process.env.GMAIL_PWD
+    pwd : process.env.GMAIL_PWD,
+    apiBaseUrl : process.env.apiBaseUrl,
+    app_id : process.env.app_id,
+    app_key : process.env.app_key
 };
 
 var transporter = nodemailer.createTransport({
@@ -32,14 +35,13 @@ function getLowestPriceForSelectedDate(src,dest,date,callback){
      console.log(response.query.results.results.span.content);
      res.json({lowestPrice:response.query.results.results.span.content});
      });*/
-    var url = 'http://www.goibibo.com/minFareChart/'+date+'/'+src+'/'+dest+'/80/';
-    request(url, function(error,response,html){
-        var lowestPrice = null;
-        if(!error){
-            var $ = cheerio.load(html);
-            lowestPrice =  $('span.countBlue.fmtTooltip')[0].children[0].data;
-        }
-        callback(lowestPrice);
+    //var url = 'http://www.goibibo.com/minFareChart/'+date+'/'+src+'/'+dest+'/80/';
+    var url = cache.apiBaseUrl+"?app_id="+cache.app_id+"&app_key="+cache.app_key+"&vertical=flight&source="+src+"&destination="+dest+"&mode=one&sdate="+date+"&class=E";
+    request(url, function(error,response,jsonString){
+        if(error) {console.log(new Date()+ ' : '+error); return;}
+        var data = JSON.parse(jsonString);
+        if(data && data.resource1) callback(data.resource1.fare);
+        else console.log(new Date()+' Data Not found');
     });
 }
 router.get('/lowestPriceForSelectedDate', function(req,res){
