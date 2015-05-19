@@ -14,12 +14,12 @@ var port = process.env.PORT||3000;
 
 var router = express.Router();
 var cache = {
-    lowestPriceForSelectedDate : 99999,
-    email : process.env.GMAIL_EMAIL,
-    pwd : process.env.GMAIL_PWD,
-    apiBaseUrl : process.env.apiBaseUrl,
-    app_id : process.env.app_id,
-    app_key : process.env.app_key
+    lowestPriceForSelectedDate : 99999, //dummy lowest price
+    email : process.env.GMAIL_EMAIL,  //email account (eg. raj@gmail.com)
+    pwd : process.env.GMAIL_PWD,   //email account password
+    apiBaseUrl : process.env.apiBaseUrl, //goibibo minfare api base url (http://developer.goibibo.com/api/stats/minfare/)
+    app_id : process.env.app_id,   // goibibo app id generated on signing up
+    app_key : process.env.app_key  //goibibo app key generated on signing up
 };
 
 var transporter = nodemailer.createTransport({
